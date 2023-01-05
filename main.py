@@ -89,11 +89,21 @@ class NewScaleSerial():
         elif self.t == 'usbxpress':
             # homebrew read until
             data = ''
+            debug = 0
             while True:
+                print('reading ', debug)
                 c = self.io.read(1).decode()
                 data += c   # do we include the terminator?
                 if (c == b'\r'): break
+                debug += 1
         return data
+
+def setBit7(msg_bytes):
+    msg_ba = bytearray(msg_bytes)
+    for i in range(len(msg_ba)):
+        msg_ba[i] = msg_ba[i] | (1<<7)
+    msg_bytes = bytes(msg_ba)
+    return msg_bytes
 
 
 if __name__ == '__main__':
@@ -110,7 +120,11 @@ if __name__ == '__main__':
     print('\tserial number = ', ser.get_serial_number())
 
     print('checking firmware..')
-    ser.write(b'TR<01>\r')
+
+    msg_bytes = b'<01>\r'
+    ser.write(setBit7(msg_bytes))
+
     result = ser.readLine()
+
     print(result)
 
