@@ -87,13 +87,10 @@ class NewScaleSerial():
             data = self.io.read_until(b'\r').decode('utf8')
         elif self.t == 'usbxpress':
             # homebrew read until
-            data = ''
-            debug = 0
             while True:
                 print('reading ', debug)
                 c = self.io.read(1).decode()
                 data += c   # do we include the terminator?
-                if (c == b'\r'): break
-                debug += 1
+                if (c == '\r'): break
         return data
 
